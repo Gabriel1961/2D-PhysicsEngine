@@ -4,7 +4,7 @@ class Spring
 {
 public:
 
-	float springConst = 5;
+	float springConst = 10;
 	float initialLength = 100;
 
 	float length;
@@ -14,7 +14,7 @@ public:
 
 	int visualWidth = 30;
 	int visualSubdiv = 10;
-	float damp = .4;
+	float damp = .1;
 
 	void Render()
 	{
@@ -28,11 +28,13 @@ public:
 		float springForce = (length - initialLength) * springConst;
 		vec2 b2b1 = normalize(dif);
 
-		float relv = glm::length(body1->velocity - body2->velocity);
 		
-		body1->velocity -= (b2b1 * springForce - relv*damp) * PhysEngine::GetDeltaTime();
-		body2->velocity += (b2b1 * springForce - relv*damp) * PhysEngine::GetDeltaTime();
+		body1->velocity -= (b2b1 * springForce) * PhysEngine::GetDeltaTime();
+		body2->velocity += (b2b1 * springForce) * PhysEngine::GetDeltaTime();
 
+		float relv = dot(body1->velocity,b2b1) + dot(body2->velocity,b2b1);
 
+		body1->velocity -= b2b1 * relv * damp * PhysEngine::GetDeltaTime();
+		body2->velocity -= b2b1 * relv * damp * PhysEngine::GetDeltaTime();
 	}
 };

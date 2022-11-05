@@ -1,4 +1,6 @@
 #include "AutoresProj.h"
+#include <iostream>
+#include <string>
 Body b1, b2;
 Spring sp;
 void AutoresProj::Start()
@@ -27,7 +29,6 @@ void AutoresProj::Render()
 
 void AutoresProj::Update()
 {
-	b1.position = PhysEngine::GetRenderer()->GetScreenSize()/2.0f;
 	sp.Update();
 	b1.Update();
 	b2.Update();
