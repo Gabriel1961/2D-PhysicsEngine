@@ -127,11 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="PathRenderer.h" />
     <ClInclude Include="RendererCommon.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SDLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PathRenderer.cpp" />
     <ClCompile Include="SDLRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

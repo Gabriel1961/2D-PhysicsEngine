@@ -1,51 +1,85 @@
+#include "RendererCommon.h"
 #include "SDLRenderer.h"
+#include "PathRenderer.h"
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_sdlrenderer.h"
+
+#define DEFAULT_WINDOW_SIZE_X 640
+#define DEFAULT_WINDOW_SIZE_Y 480
+#define DISPLAY_FRAMERATE_IN_TITLE
 
 void SDLRenderer::Init()
 {
-	if (SDL_CreateWindowAndRenderer(640, 480, SDL_WINDOW_RESIZABLE, &window, &renderer) == -1)
+
+	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI );
+	window = SDL_CreateWindow("Hellow", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_WINDOW_SIZE_X, DEFAULT_WINDOW_SIZE_Y, window_flags);
+	
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+	if (renderer == NULL)
 	{
-		printf(SDL_GetError());
+		SDL_Log("Error creating SDL_Renderer!");
 		throw std::exception();
 	}
+
+	/// Imgui ///
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	
+	// Setup Platform/Renderer backends
+	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+	ImGui_ImplSDLRenderer_Init(renderer);
+
 	done = SDL_FALSE;
-	mTicksCount =SDL_GetTicks();
+	mTicksCount = SDL_GetTicks();
 }
 
 void SDLRenderer::StartRender()
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(renderer);
-
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+	ImGui_ImplSDLRenderer_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
 }
 
 void SDLRenderer::EndRender()
 {
-	//DrawSpring({ 100,100 }, { 500,100 }, 30, 20);
+	ImGui::Render();
 
-	SDL_RenderPresent(renderer);
+	ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+	SDL_RenderPresent(renderer);	
 }
 
 
 void SDLRenderer::PollEvents()
 {
 	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT) {
+	while (SDL_PollEvent(&event)) 
+	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+		if (event.type == SDL_QUIT)
 			done = SDL_TRUE;
-		}
+		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
+			done = SDL_TRUE;
 	}
 }
 
 void SDLRenderer::Dispose()
 {
-	if (renderer) {
-		SDL_DestroyRenderer(renderer);
-	}
-	if (window) {
-		SDL_DestroyWindow(window);
-	}
+	ImGui_ImplSDLRenderer_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
 
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 
@@ -53,6 +87,7 @@ bool SDLRenderer::ShouldClose()
 {
 	return done;
 }
+
 glm::vec2 SDLRenderer::GetMousePos()
 {
 	int x, y;
@@ -88,12 +123,29 @@ void SDLRenderer::DrawSpring(glm::vec2 p1, glm::vec2 p2,float width, int subdiv)
 	SDL_RenderDrawLine(renderer, op.x, op.y, np.x, np.y);
 
 }
-
+/// 
+/// must be called only once per frame
+/// 
 float SDLRenderer::GetDeltaTime()
 {
-
-	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 	// Update tick counts (for next frame)
+	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+#ifdef DISPLAY_FRAMERATE_IN_TITLE
 	mTicksCount = SDL_GetTicks();
+	std::string title = std::to_string((int)(1/deltaTime));
+	SDL_SetWindowTitle(window, title.c_str());
+#endif
 	return deltaTime;
+}
+
+float SDLRenderer::GetElapsedTime()
+{
+	return SDL_GetTicks() / 1000.f;
+}
+
+void SDLRenderer::Draw(const PathRenderer& rend)
+{
+	std::vector<ivec2> data(rend.points.begin(),rend.points.end());
+	if (data.size())
+		SDL_RenderDrawLines(renderer, (SDL_Point*)&data[0], data.size());
 }

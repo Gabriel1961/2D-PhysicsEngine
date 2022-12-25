@@ -29,12 +29,12 @@ public:
 		vec2 b2b1 = normalize(dif);
 
 		
-		body1->velocity -= (b2b1 * springForce) * PhysEngine::GetDeltaTime();
-		body2->velocity += (b2b1 * springForce) * PhysEngine::GetDeltaTime();
+		body1->velocity -= (b2b1 * springForce) * PhysEngine::GetFixedDeltaTime();
+		body2->velocity += (b2b1 * springForce) * PhysEngine::GetFixedDeltaTime();
 
 		float relv = dot(body1->velocity,b2b1) + dot(body2->velocity,b2b1);
 
-		body1->velocity -= b2b1 * relv * damp * PhysEngine::GetDeltaTime();
-		body2->velocity -= b2b1 * relv * damp * PhysEngine::GetDeltaTime();
+		body1->velocity -= b2b1 * relv * damp * PhysEngine::GetFixedDeltaTime();
+		body2->velocity -= b2b1 * relv * damp * PhysEngine::GetFixedDeltaTime();
 	}
 };

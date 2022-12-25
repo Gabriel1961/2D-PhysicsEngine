@@ -32,8 +32,7 @@ public:
 			velocity = { 0,0 };
 			return;
 		}
-		velocity += glm::vec2(0,1) * gravity * PhysEngine::GetDeltaTime();
-		position += velocity * PhysEngine::GetDeltaTime();
-		//printf("%f\n", PhysEngine::GetDeltaTime());
+		velocity += glm::vec2(0,1) * gravity * PhysEngine::GetFixedDeltaTime();
+		position += velocity * PhysEngine::GetFixedDeltaTime();
 	}
 };

@@ -1,8 +1,8 @@
 #include "AutoresProj.h"
-#include <iostream>
-#include <string>
 Body b1, b2;
 Spring sp;
+LinearOscilator osc;
+PathRenderer path;
 void AutoresProj::Start()
 {
 	b1 = {
@@ -18,17 +18,36 @@ void AutoresProj::Start()
 		.body1 = &b1,
 		.body2 = &b2,
 	};
+	
+	osc.oscilations = { Oscilation({1,0},2*pi,100),Oscilation({0,1},2*pi,100,pi/2) };
+	path.maxSize = 100;
 }
 
 void AutoresProj::Render()
 {
+#if 0
 	b1.Render();
 	b2.Render();
 	sp.Render();
+#endif 
+	ImGui::Begin("Setari oscilator");
+	if (ImGui::SliderAngle("Phi0", &osc.oscilations[0].phi0)) {
+		path.Clear();
+	}
+	ImGui::End();
+	osc.body.Render();
+	path.AddPoint(osc.body.position);
+	PhysEngine::GetRenderer()->Draw(path);
 }
 
 void AutoresProj::Update()
 {
+
+}
+
+void AutoresProj::FixedUpdate()
+{
+#if 0
 	sp.Update();
 	b1.Update();
 	b2.Update();
@@ -36,10 +55,8 @@ void AutoresProj::Update()
 	{
 		b2.position = PhysEngine::GetRenderer()->GetMousePos();
 		b2.velocity = { 0,0 };
-	}
-	//printf("%f\n", PhysEngine::GetDeltaTime());
 }
-
-void AutoresProj::FixedUpdate()
-{
+	path.AddPoint(b2.position);
+#endif
+	osc.Update(PhysEngine::GetElapsedTime());
 }
