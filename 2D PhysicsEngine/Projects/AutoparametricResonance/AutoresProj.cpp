@@ -31,7 +31,21 @@ void AutoresProj::Render()
 	sp.Render();
 #endif 
 	ImGui::Begin("Setari oscilator");
-	if (ImGui::SliderAngle("Phi0", &osc.oscilations[0].phi0)) {
+	bool changed = false;
+	
+	ImGui::SliderInt("Trail Length", &path.maxSize, 1, 1000);
+
+	ImGui::Text("Oscilator 1");
+	changed |= ImGui::SliderFloat("Phi0", &osc.oscilations[0].phi0,0,2*pi);
+	changed |= ImGui::SliderFloat("Omega", &osc.oscilations[0].w,-3,3);
+	changed |= ImGui::SliderFloat("A", &osc.oscilations[0].amp, 0, 200);
+
+	ImGui::Text("Oscilator 2");
+	changed |= ImGui::SliderFloat("Phi0##2", &osc.oscilations[1].phi0, 0, 2 * pi);
+	changed |= ImGui::SliderFloat("Omega##2", &osc.oscilations[1].w, -3, 3);
+	changed |= ImGui::SliderFloat("A##2", &osc.oscilations[1].amp, 0, 200);
+
+	if (changed) {
 		path.Clear();
 	}
 	ImGui::End();
