@@ -45,12 +45,13 @@ void AutoresProj::Render()
 	changed |= ImGui::SliderFloat("Omega##2", &osc.oscilations[1].w, -3, 3);
 	changed |= ImGui::SliderFloat("A##2", &osc.oscilations[1].amp, 0, 200);
 
+	ImGui::End();
+
+	path.AddPoint(osc.body.position);
 	if (changed) {
 		path.Clear();
 	}
-	ImGui::End();
 	osc.body.Render();
-	path.AddPoint(osc.body.position);
 	PhysEngine::GetRenderer()->Draw(path);
 }
 
