@@ -99,11 +99,11 @@ int SDLRenderer::GetMouseState()
 	int x, y;
 	return SDL_GetMouseState(&x, &y);
 }
-glm::vec2 SDLRenderer::GetScreenSize()
+glm::ivec2 SDLRenderer::GetWindowSize()
 {
-	SDL_DisplayMode DM;
-	SDL_GetCurrentDisplayMode(0, &DM);
-	return { DM.w, DM.h };
+	ivec2 sz;
+	SDL_GetWindowSize(mWindow, &sz.x, &sz.y);
+	return sz;
 }
 void SDLRenderer::DrawSpring(glm::vec2 p1, glm::vec2 p2,float width, int subdiv)
 {

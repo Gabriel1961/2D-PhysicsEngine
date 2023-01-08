@@ -22,7 +22,7 @@ public:
 	bool ShouldClose()override;
 	glm::vec2 GetMousePos() override;
 	int GetMouseState() override;
-	glm::vec2 GetScreenSize() override;
+	glm::ivec2 GetWindowSize() override;
 	void DrawSpring(glm::vec2 p1, glm::vec2 p2,float width, int subdiv)override;
 	float GetDeltaTime()override;
 	float GetElapsedTime()override;

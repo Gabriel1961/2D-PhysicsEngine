@@ -81,5 +81,6 @@ void AutoresProj::FixedUpdate()
 }
 	path.AddPoint(b2.position);
 #endif
+	osc.offset = vec2(PhysEngine::GetRenderer()->GetWindowSize()) / 2.0f;
 	osc.Update(PhysEngine::GetFixedDeltaTime());
 }

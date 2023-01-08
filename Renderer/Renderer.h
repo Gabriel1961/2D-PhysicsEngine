@@ -15,7 +15,7 @@ public:
 	virtual float GetElapsedTime() = 0;
 	virtual glm::vec2 GetMousePos() = 0;
 	virtual int GetMouseState() = 0;
-	virtual glm::vec2 GetScreenSize() = 0;
+	virtual glm::ivec2 GetWindowSize() = 0;
 	virtual void Draw(const PathRenderer&) = 0;
 	virtual void DrawSpring(glm::vec2 p1, glm::vec2 p2,float width,int subdiv)=0;
 };
