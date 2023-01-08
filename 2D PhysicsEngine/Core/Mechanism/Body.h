@@ -1,6 +1,7 @@
 #pragma once
 #include "../EngineCommon.h"
-class Body
+#include "../Interfaces/ITransform.h"
+class Body : public ITransform2D
 {
 public:
 
@@ -25,14 +26,16 @@ public:
 		SDL_RenderDrawRect(Core::PhysEngine::GetSDLRenderer(), &visualRect);
 	}
 
-	void Update()
+	void Update(float deltaTime) override
 	{
 		if (isFixed)
 		{
 			velocity = { 0,0 };
 			return;
 		}
-		velocity += glm::vec2(0,1) * gravity * PhysEngine::GetFixedDeltaTime();
-		position += velocity * PhysEngine::GetFixedDeltaTime();
+		velocity += glm::vec2(0,1) * gravity * deltaTime;
+		position += velocity * deltaTime;
 	}
+
+	vec2 GetPos() override { return position; }
 };

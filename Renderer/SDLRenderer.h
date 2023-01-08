@@ -8,10 +8,10 @@
 class SDLRenderer : public Renderer
 {
 private:
-	SDL_bool done;
-	SDL_Window* window = NULL;
-	SDL_Renderer* renderer = NULL;
-	SDL_GLContext gl_context;
+	SDL_bool mDone;
+	SDL_Window* mWindow = NULL;
+	SDL_Renderer* mRenderer = NULL;
+	SDL_GLContext mGlContext;
 	Uint64 mTicksCount=0;
 public:
 	void Init()override;
@@ -27,6 +27,6 @@ public:
 	float GetDeltaTime()override;
 	float GetElapsedTime()override;
 	void Draw(const PathRenderer& rend) override;
-	SDL_Renderer* GetRenderer() { return renderer; }
+	SDL_Renderer* GetRenderer() { return mRenderer; }
 };
 

@@ -3,3 +3,4 @@
 #include "Mechanism/Body.h"
 #include "Mechanism/Spring.h"
 #include "Mechanism/LinearOscilator.h"
+#include "PathCalculator.h"

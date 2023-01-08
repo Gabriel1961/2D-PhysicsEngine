@@ -14,9 +14,7 @@ void PathRenderer::AddPoint(const glm::vec2& point)
 
 PathRenderer::PathRenderer(const std::vector<glm::vec2>& _points)
 {
-	points = std::deque<ivec2>(_points.size());
-	for (ivec2& p : points)
-		points.push_back(p);
+	points = std::deque<ivec2>(_points.begin(),_points.end());
 }
 
 PathRenderer::PathRenderer()

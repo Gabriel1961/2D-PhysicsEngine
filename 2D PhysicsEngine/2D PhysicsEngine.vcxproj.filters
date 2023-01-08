@@ -50,6 +50,12 @@
     <ClInclude Include="Core\Mechanism\Oscilation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\PathCalculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Interfaces\ITransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\EngineCommon.h" />

@@ -140,10 +140,12 @@
     <ClCompile Include="Core\PhysEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Interfaces\ITransform.h" />
     <ClInclude Include="Core\Mechanism\Body.h" />
     <ClInclude Include="Core\Mechanism\LinearOscilator.h" />
     <ClInclude Include="Core\Mechanism\Oscilation.h" />
     <ClInclude Include="Core\Mechanism\Spring.h" />
+    <ClInclude Include="Core\PathCalculator.h" />
     <ClInclude Include="Core\PhysCore.h" />
     <ClInclude Include="Projects\AutoparametricResonance\AutoresProj.h" />
     <ClInclude Include="Core\PhysEngine.h" />

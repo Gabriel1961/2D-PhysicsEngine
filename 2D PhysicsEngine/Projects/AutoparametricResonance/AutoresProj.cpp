@@ -3,21 +3,18 @@ Body b1, b2;
 Spring sp;
 LinearOscilator osc;
 PathRenderer path;
+bool instantCalc=0;
 void AutoresProj::Start()
 {
-	b1 = {
-		.position = { 100,100 },
-		.gravity = 0,
-		.isFixed = true,
-	};
-	b2 = {
-		.mass = 10,
-		.position = {100,200},
-	};
-	sp = {
-		.body1 = &b1,
-		.body2 = &b2,
-	};
+	b1.position = { 100,100 },
+	b1.gravity = 0,
+	b1.isFixed = true,
+
+	b2.mass = 10,
+	b2.position = {100,200},
+
+	sp.body1 = &b1,
+	sp.body2 = &b2,
 	
 	osc.oscilations = { Oscilation({1,0},2*pi,100),Oscilation({0,1},2*pi,100,pi/2) };
 	path.maxSize = 100;
@@ -32,8 +29,11 @@ void AutoresProj::Render()
 #endif 
 	ImGui::Begin("Setari oscilator");
 	bool changed = false;
+	if (ImGui::Checkbox("Calculeaza drumul instant", &instantCalc)) {
+		path.Clear();
+	}
 	
-	ImGui::SliderInt("Trail Length", &path.maxSize, 1, 1000);
+	ImGui::InputInt("Trail Length", &path.maxSize,100,1000);
 
 	ImGui::Text("Oscilator 1");
 	changed |= ImGui::SliderFloat("Phi0", &osc.oscilations[0].phi0,0,2*pi);
@@ -46,12 +46,20 @@ void AutoresProj::Render()
 	changed |= ImGui::SliderFloat("A##2", &osc.oscilations[1].amp, 0, 200);
 
 	ImGui::End();
-
-	path.AddPoint(osc.body.position);
-	if (changed) {
-		path.Clear();
+	if (instantCalc) {
+		PathCalculator pc(&osc);
+		int mxLen = path.maxSize;
+		osc.currentTime = 0;
+		path = PathRenderer(pc.GetPath(PhysEngine::GetFixedDeltaTime(), path.maxSize));
+		path.maxSize = mxLen;
 	}
-	osc.body.Render();
+	else {
+		path.AddPoint(osc.body.position);
+		if (changed) {
+			path.Clear();
+		}
+		osc.body.Render();
+	}
 	PhysEngine::GetRenderer()->Draw(path);
 }
 
@@ -73,5 +81,5 @@ void AutoresProj::FixedUpdate()
 }
 	path.AddPoint(b2.position);
 #endif
-	osc.Update(PhysEngine::GetElapsedTime());
+	osc.Update(PhysEngine::GetFixedDeltaTime());
 }
