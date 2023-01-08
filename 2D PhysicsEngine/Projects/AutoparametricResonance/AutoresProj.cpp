@@ -3,7 +3,8 @@ Body b1, b2;
 Spring sp;
 LinearOscilator osc;
 PathRenderer path;
-bool instantCalc=0;
+bool instantCalc;
+bool rapoarteMenu;
 void AutoresProj::Start()
 {
 	b1.position = { 100,100 },
@@ -33,17 +34,32 @@ void AutoresProj::Render()
 		path.Clear();
 	}
 	
+	
 	ImGui::InputInt("Trail Length", &path.maxSize,100,1000);
+	ImGui::Checkbox("Rapoarte",&rapoarteMenu);
 
-	ImGui::Text("Oscilator 1");
-	changed |= ImGui::SliderFloat("Phi0", &osc.oscilations[0].phi0,0,2*pi);
-	changed |= ImGui::SliderFloat("Omega", &osc.oscilations[0].w,-3,3);
-	changed |= ImGui::SliderFloat("A", &osc.oscilations[0].amp, 0, 200);
+	if (rapoarteMenu) {
+		static int w1=1, w2=1;
+		changed |= ImGui::SliderFloat("Phi0", &osc.oscilations[0].phi0, 0, 2 * pi);
+		changed |= ImGui::SliderInt("W1", &w1, 1, 20);
+		changed |= ImGui::SliderInt("W2", &w2, 1, 20);
+		osc.oscilations[0].w = w1;
+		osc.oscilations[1].w = w2;
+		changed |= ImGui::SliderFloat("A", &osc.oscilations[0].amp, 0, 200);
+		changed |= ImGui::SliderFloat("A##2", &osc.oscilations[1].amp, 0, 200);
+	}
+	else {
 
-	ImGui::Text("Oscilator 2");
-	changed |= ImGui::SliderFloat("Phi0##2", &osc.oscilations[1].phi0, 0, 2 * pi);
-	changed |= ImGui::SliderFloat("Omega##2", &osc.oscilations[1].w, -3, 3);
-	changed |= ImGui::SliderFloat("A##2", &osc.oscilations[1].amp, 0, 200);
+		ImGui::Text("Oscilator 1");
+		changed |= ImGui::SliderFloat("Phi0", &osc.oscilations[0].phi0, 0, 2 * pi);
+		changed |= ImGui::SliderFloat("Omega", &osc.oscilations[0].w, -3, 3);
+		changed |= ImGui::SliderFloat("A", &osc.oscilations[0].amp, 0, 200);
+
+		ImGui::Text("Oscilator 2");
+		changed |= ImGui::SliderFloat("Phi0##2", &osc.oscilations[1].phi0, 0, 2 * pi);
+		changed |= ImGui::SliderFloat("Omega##2", &osc.oscilations[1].w, -3, 3);
+		changed |= ImGui::SliderFloat("A##2", &osc.oscilations[1].amp, 0, 200);
+	}
 
 	ImGui::End();
 	if (instantCalc) {
